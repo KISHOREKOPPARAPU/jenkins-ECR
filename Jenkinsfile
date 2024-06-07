@@ -1,8 +1,11 @@
 pipeline {
     agent any
      environment {
-        registry = "566829558047.dkr.ecr.us-east-1.amazonaws.com/jenkins-ecr-repo"
-    }
+        AWS_ACCOUNT_ID = '566829558047'
+        AWS_DEFAULT_REGION = 'us-east-1'
+        ECR_REPOSITORY_NAME = 'jenkins-ecr-repo'
+        IMAGE_TAG = "latest"
+     }
    
     stages {
           stage('Checkout') {
@@ -21,7 +24,7 @@ pipeline {
             stage('Pushing to ECR') {
              steps{  
                   script {
-     withDockerRegistry(CredentialId: 'docker', toolName:'docker') {
+     withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_cred', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
      sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 566829558047.dkr.ecr.us-east-1.amazonaws.com'
      sh 'docker push 566829558047.dkr.ecr.us-east-1.amazonaws.com/jenkins-ecr-repo:latest'
 }
