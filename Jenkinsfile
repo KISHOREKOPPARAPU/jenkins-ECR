@@ -7,7 +7,7 @@ pipeline {
     stages {
           stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Meenakshi0812/jenkins-ECR.git'
+                git branch: 'main', changelog: false, poll: false, url: 'https://github.com/KISHOREKOPPARAPU/jenkins-ECR.git'
             }
         }
            stage('Building image') {
@@ -22,8 +22,8 @@ pipeline {
              steps{  
                   script {
                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_cred', accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-    sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <Account_ID>.dkr.ecr.us-east-1.amazonaws.com'
-     sh 'docker push <Account_ID>.dkr.ecr.us-east-1.amazonaws.com/<REPO_NAME>'
+    sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 566829558047.dkr.ecr.us-east-1.amazonaws.com'
+     sh 'docker push 566829558047.dkr.ecr.us-east-1.amazonaws.com/jenkins-ecr-repo:latest'
 }
 
 }
@@ -38,7 +38,7 @@ pipeline {
             stage('Docker Run') {
               steps{
                    script {
-                sh 'docker run -d -p 8096:5000 --rm --name mypythonContainer <Account_ID>.dkr.ecr.us-east-1.amazonaws.com/<REPO_NAME>:latest'     
+                sh 'docker run -d -p 8096:5000 --rm --name mypythonContainer 566829558047.dkr.ecr.us-east-1.amazonaws.com/jenkins-ecr-repo:latest'     
       }
     }
         }
