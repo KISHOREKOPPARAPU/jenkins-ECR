@@ -21,7 +21,7 @@ pipeline {
             stage('Pushing to ECR') {
              steps{  
                   script {
-               withCredentialsRegistry(CredentialId:'docker','toolName: 'docker') {
+               withCredentialsRegistry(Credential Id:'docker', toolName:'docker') {
     sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 566829558047.dkr.ecr.us-east-1.amazonaws.com'
      sh 'docker push 566829558047.dkr.ecr.us-east-1.amazonaws.com/jenkins-ecr-repo:latest'
 }
